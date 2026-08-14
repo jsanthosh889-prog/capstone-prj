@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Order Approval System</title>
+    <!-- Modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="app-header">
+            <div class="logo-section">
+                <span class="logo-icon">📋</span>
+                <span class="logo-text">PO Flow</span>
+            </div>
+            
+            <!-- Navigation Placeholder -->
+            <nav class="app-nav">
+                <a href="#" class="nav-item active">Dashboard</a>
+                <a href="#" class="nav-item disabled">Purchase Orders</a>
+                <a href="#" class="nav-item disabled">Approvals</a>
+                <a href="#" class="nav-item disabled">Users</a>
+            </nav>
+
+            <!-- Health Status Widget -->
+            <div class="health-widget">
+                <span class="status-label">Backend Status:</span>
+                <div id="status-indicator" class="status-indicator checking"></div>
+                <span id="status-text" class="status-text">Checking...</span>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="app-main">
+            <section class="welcome-card">
+                <h1>Purchase Order Approval System</h1>
+                <p class="subtitle">Phase 1: Project foundation and database setup verification.</p>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>Database Schema</h3>
+                        <p>Tables successfully defined:</p>
+                        <ul>
+                          <li><code>users</code> (Roles: REQUESTER, APPROVER, ADMIN)</li>
+                          <li><code>purchase_orders</code> (Status: DRAFT, PENDING, APPROVED, REJECTED)</li>
+                          <li><code>approval_history</code></li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>Backend Connection</h3>
+                        <p>A simple REST check connects this UI to the backend service.</p>
+                        <button id="retry-btn" class="btn-primary">Test Connection</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 PO Flow System. Minimal Phase 1 Setup.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
