@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Orders - PO Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        .po-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        .po-table th, .po-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .po-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .po-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .badge-status {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-draft { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid #64748b; }
+        .status-pending_approval { background: rgba(245, 158, 11, 0.15); color: #fde68a; border: 1px solid var(--warning); }
+        .status-approved { background: rgba(16, 185, 129, 0.15); color: #a7f3d0; border: 1px solid var(--success); }
+        .status-rejected { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid var(--error); }
+        
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 0.25rem;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        .btn-submit { background: var(--accent); border-color: var(--accent); color: white; }
+        .btn-submit:hover { background: var(--accent-hover); }
+        .btn-edit { background: rgba(99, 102, 241, 0.1); border-color: var(--accent); color: var(--accent); }
+        .btn-edit:hover { background: var(--accent); color: white; }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); border-color: var(--error); color: var(--error); }
+        .btn-delete:hover { background: var(--error); color: white; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-section">
+                <span class="logo-icon">📋</span>
+                <span class="logo-text">PO Flow</span>
+            </div>
+            
+            <nav class="app-nav">
+                <a href="dashboard.html" class="nav-item">Dashboard</a>
+                <a href="purchase_orders.html" id="nav-pos" class="nav-item active">Purchase Orders</a>
+                <a href="approval.html" id="nav-approvals" class="nav-item">Approvals</a>
+            </nav>
+
+            <button id="logout-btn" class="btn-primary" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.85rem; padding: 0.5rem 1rem;">
+                Logout
+            </button>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="app-main" style="padding: 2rem 0;">
+            <div class="welcome-card" style="margin-bottom: 2rem; padding: 2rem;">
+                <h2 id="form-title" style="margin-bottom: 1.5rem;">Create Purchase Order</h2>
+                <div id="error-message" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); color: #fca5a5; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.9rem; margin-bottom: 1.25rem;"></div>
+                
+                <form id="po-form">
+                    <input type="hidden" id="po-id">
+                    <div class="info-grid" style="grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" id="title" class="form-control" placeholder="Office Supplies, Software License, etc." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" class="form-control" placeholder="Details about this purchase order..." style="height: 105px; resize: none;"></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="vendorName">Vendor Name</label>
+                                <input type="text" id="vendorName" class="form-control" placeholder="Vendor Corp" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="amount">Amount ($)</label>
+                                <input type="number" id="amount" class="form-control" placeholder="0.00" step="0.01" min="0" required>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 2rem;">
+                                <button type="submit" class="btn-primary" style="flex-grow: 1;">Save PO</button>
+                                <button type="button" id="cancel-btn" class="btn-primary" style="background: rgba(255, 255, 255, 0.05); color: var(--text-primary); border: 1px solid var(--border-color); display: none;">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- PO List Grid -->
+            <div class="welcome-card" style="padding: 2rem;">
+                <h2>My Purchase Orders</h2>
+                <div style="overflow-x: auto;">
+                    <table class="po-table">
+                        <thead>
+                            <tr>
+                                <th>PO Number</th>
+                                <th>Title</th>
+                                <th>Vendor</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="po-list-body">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 2rem;">Loading purchase orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 PO Flow System.</p>
+        </footer>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="purchase_orders.js"></script>
+</body>
+</html>
