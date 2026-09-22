@@ -16,3 +16,9 @@
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# Database binaries
+*.mv.db
+*.trace.db
+backend/database/
+database/*.mv.db

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Orders - PO Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .search-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .search-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+        @media (max-width: 768px) {
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-group {
+            margin-bottom: 0;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2em;
+            padding-right: 2.5rem;
+        }
+        .po-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .po-table th, .po-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .po-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .po-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .badge-status {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-draft { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid #64748b; }
+        .status-pending_approval { background: rgba(245, 158, 11, 0.15); color: #fde68a; border: 1px solid var(--warning); }
+        .status-approved { background: rgba(16, 185, 129, 0.15); color: #a7f3d0; border: 1px solid var(--success); }
+        .status-rejected { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid var(--error); }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .pagination-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+        }
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .page-info {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .btn-action {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-family: var(--font-sans);
+        }
+        .btn-action:hover {
+            background: var(--accent-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-section">
+                <span class="logo-icon">📋</span>
+                <span class="logo-text">PO Flow</span>
+            </div>
+            
+            <nav class="app-nav">
+                <a href="dashboard.html" class="nav-item">Dashboard</a>
+                <a href="po-list.html" id="nav-pos" class="nav-item active">Purchase Orders</a>
+                <a href="approval.html" id="nav-approvals" class="nav-item">Approvals</a>
+            </nav>
+
+            <button id="logout-btn" class="btn-primary" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.85rem; padding: 0.5rem 1rem;">
+                Logout
+            </button>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="app-main" style="padding: 2rem 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h1>Purchase Orders Search</h1>
+                    <p class="subtitle" style="margin-bottom: 0;">Search, filter, and paginate through records.</p>
+                </div>
+                <a href="purchase_orders.html" id="create-po-btn" class="btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <span>+</span> Create PO
+                </a>
+            </div>
+
+            <!-- Search Panel -->
+            <div class="search-container">
+                <div class="search-grid">
+                    <div class="form-group">
+                        <label for="search-input">Search Text</label>
+                        <input type="text" id="search-input" class="form-control" placeholder="Search by PO number, title or vendor name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="status-select">Status Filter</label>
+                        <select id="status-select" class="form-control form-select">
+                            <option value="ALL">ALL</option>
+                            <option value="DRAFT">DRAFT</option>
+                            <option value="PENDING_APPROVAL">PENDING APPROVAL</option>
+                            <option value="APPROVED">APPROVED</option>
+                            <option value="REJECTED">REJECTED</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="search-btn" class="btn-primary" style="padding: 0.75rem 1.25rem;">Search</button>
+                        <button id="clear-btn" class="btn-primary" style="background: rgba(255, 255, 255, 0.05); color: var(--text-primary); border: 1px solid var(--border-color); padding: 0.75rem 1.25rem;">Clear</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PO List Grid -->
+            <div class="welcome-card" style="padding: 2rem;">
+                <div style="overflow-x: auto;">
+                    <table class="po-table">
+                        <thead>
+                            <tr>
+                                <th>PO Number</th>
+                                <th>Title</th>
+                                <th>Vendor</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="po-list-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 2rem;">Loading purchase orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Panel -->
+                <div class="pagination-container">
+                    <button id="prev-btn" class="pagination-btn" disabled>Previous</button>
+                    <span id="page-info" class="page-info">Page 0 of 0</span>
+                    <button id="next-btn" class="pagination-btn" disabled>Next</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 PO Flow System. Search Engine.</p>
+        </footer>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="po-list.js"></script>
+</body>
+</html>
