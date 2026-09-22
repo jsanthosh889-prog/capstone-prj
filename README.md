@@ -4,12 +4,27 @@ A comprehensive web application designed to streamline the creation, tracking, a
 
 ---
 
+## 🌐 Live Application & Cloud Services
+
+* 🚀 **Live Web Application (Render):** [Purchase Order Approval System](https://capstone-prj-ewjz.onrender.com/)
+* ⚡ **Supabase Project URL:** `https://qsnelbxwprotsndwkiak.supabase.co`
+* 🔄 **Supabase Realtime WebSocket:** `wss://qsnelbxwprotsndwkiak.supabase.co/realtime/v1/websocket`
+
+### 🔑 Demo Accounts (One-Click Sign-In Available on Portal)
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Requester** | `alice@example.com` | `password123` |
+| **Approver** | `bob@example.com` | `password123` |
+| **Admin** | `charlie@example.com` | `password123` |
+
+---
+
 ## 📐 System Architecture
 
 The application is built on a **Decoupled Client-Server Architecture** utilizing a three-tier design pattern:
 1. **Presentation Layer (Frontend)**: A lightweight, responsive UI built with semantic HTML5, Vanilla CSS, and modern asynchronous JavaScript. It connects to the backend REST APIs and opens a direct WebSocket connection to the cloud database provider for real-time reactive updates.
 2. **Application Layer (Backend)**: A robust REST API backend powered by **Spring Boot**, utilizing Spring Security, custom JWT authentication, and Spring Data JPA.
-3. **Database Layer (Data Store)**: A cloud-hosted **PostgreSQL** instance managed on Supabase.
+3. **Database Layer (Data Store)**: A cloud-hosted **PostgreSQL** instance managed on [Supabase](https://qsnelbxwprotsndwkiak.supabase.co).
 
 ### 🔄 Architectural Flow Diagram
 
@@ -77,7 +92,8 @@ graph TD
 
 ### **Database & Deployment Hosting**
 *   **Engine**: PostgreSQL (Compatible with version 15+)
-*   **Cloud Host**: Supabase (Database + Realtime Broadcasting Engine)
+*   **Cloud Database**: [Supabase](https://qsnelbxwprotsndwkiak.supabase.co) (PostgreSQL Database + Realtime Broadcasting Engine)
+*   **Cloud Application Hosting**: [Render](https://capstone-prj-ewjz.onrender.com/) (Web Service)
 
 ---
 
