@@ -14,7 +14,7 @@ const poListBody = document.getElementById('po-list-body');
 const errorDiv = document.getElementById('error-message');
 
 function getApiBaseHost() {
-    if (window.location.port === '8082' || (window.location.origin && window.location.origin.includes(':8082'))) {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
         return '';
     }
     return 'http://localhost:8082';

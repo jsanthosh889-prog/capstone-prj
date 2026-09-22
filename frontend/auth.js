@@ -1,6 +1,5 @@
 function getApiBaseHost() {
-    // When served from Spring Boot backend on 8082, use relative root
-    if (window.location.port === '8082' || (window.location.origin && window.location.origin.includes(':8082'))) {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
         return '';
     }
     return 'http://localhost:8082';

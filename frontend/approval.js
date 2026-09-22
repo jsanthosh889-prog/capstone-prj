@@ -32,7 +32,7 @@ const modalSubmitReject = document.getElementById('modal-submit-reject');
 const rejectCommentsInput = document.getElementById('reject-comments');
 
 function getApiBaseHost() {
-    if (window.location.port === '8082' || (window.location.origin && window.location.origin.includes(':8082'))) {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
         return '';
     }
     return 'http://localhost:8082';
